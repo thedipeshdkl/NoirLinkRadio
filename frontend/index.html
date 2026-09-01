@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>NoirLink Radio 107.2 MHz - Your Voice, Your Station</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="उत्कृष्ट संगीतको मिठास, ताजा समाचारको विश्वसनीय जानकारी र रोचक टक शोहरूको मनोरञ्जन—सबै एउटै ठाउँमा, जुनसुकै बेला र जहाँसुकै। आजै हामीसँग जोडिनुहोस् र आवाज, विचार र संवादको यो विशेष यात्राको हिस्सा बन्नुहोस्" />
+    <meta name="keywords" content="radio, live radio, music, news, podcasts, fm radio station" />
+    <meta name="author" content="NoirLink Radio" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NoirLink Radio 107.2 MHz - Your Voice, Your Station" />
+    <meta property="og:description" content="Listen to live radio, watch the studio live stream, and catch up on your favorite podcasts." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NoirLink Radio 107.2 MHz - Your Voice, Your Station" />
+    <meta name="twitter:description" content="Listen to live radio, watch the studio live stream, and catch up on your favorite podcasts." />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('SW registration failed: ', err);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
