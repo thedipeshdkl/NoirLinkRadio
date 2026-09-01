@@ -7,6 +7,7 @@ import { Video, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { fetchLiveVideo } from '@/api';
+import { LiveChat } from '@/components/LiveChat';
 
 export default function LiveVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -123,6 +124,8 @@ export default function LiveVideo() {
               <Button className="w-full" variant="outline">Call Studio: 555-0199</Button>
             </CardContent>
           </Card>
+          
+          <LiveChat />
         </div>
 
       </div>

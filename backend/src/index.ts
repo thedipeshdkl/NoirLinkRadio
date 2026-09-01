@@ -12,6 +12,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import * as dotenv from 'dotenv';
 import { secureHeaders } from 'hono/secure-headers';
+import { Server as SocketIOServer } from 'socket.io';
 
 dotenv.config();
 
@@ -818,10 +819,62 @@ app.get('/api/system/health', requireAuth(['SUPER_ADMIN']), async (c) => {
   }
 });
 
-const port = parseInt(process.env.PORT || '3000');
-console.log(`Server is running on port ${port}`);
+if (process.env.NODE_ENV !== 'test') {
+  const port = parseInt(process.env.PORT || '3000');
+  console.log(`Server is running on port ${port}`);
 
-serve({
-  fetch: app.fetch,
-  port
-});
+  const httpServer = serve({
+    fetch: app.fetch,
+    port
+  });
+
+  const io = new SocketIOServer(httpServer, {
+    cors: {
+      origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+      methods: ["GET", "POST"],
+      credentials: true
+    }
+  });
+
+  io.on('connection', (socket) => {
+    console.log(`Client connected to chat: ${socket.id}`);
+
+    socket.on('join_chat', async () => {
+      try {
+        const history = await db.select()
+          .from(schema.chatMessages)
+          .where(eq(schema.chatMessages.status, 'approved'))
+          .orderBy(desc(schema.chatMessages.createdAt))
+          .limit(50);
+        
+        socket.emit('chat_history', history.reverse());
+      } catch (error) {
+        console.error('Error fetching chat history:', error);
+      }
+    });
+
+    socket.on('send_message', async (data) => {
+      try {
+        if (!data.message || data.message.trim().length === 0) return;
+        
+        const newMsg = await db.insert(schema.chatMessages).values({
+          nickname: data.nickname || 'Anonymous',
+          message: data.message.substring(0, 500),
+          sessionId: socket.id,
+          status: 'approved',
+          createdAt: new Date()
+        }).returning();
+
+        io.emit('new_message', newMsg[0]);
+      } catch (error) {
+        console.error('Error saving chat message:', error);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log(`Client disconnected from chat: ${socket.id}`);
+    });
+  });
+}
+
+export default app;

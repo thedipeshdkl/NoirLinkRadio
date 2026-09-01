@@ -6,6 +6,7 @@ import { Radio, Menu, X, Play, Video, LogOut, Search, ChevronDown } from 'lucide
 import { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import { useSettings } from '@/hooks/useSettings';
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,25 +22,27 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const { data: settings } = useSettings();
 
+  const { t, i18n } = useTranslation();
+
   const isLivePlaying = isPlaying && currentTrack?.isLive;
 
   const mainLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Live Radio', path: '/radio' },
-    { name: 'News', path: '/news' },
-    { name: 'Podcasts', path: '/podcasts' },
-    { name: 'Programs', path: '/programs' },
+    { name: t('navbar.home'), path: '/' },
+    { name: t('navbar.liveRadio'), path: '/radio' },
+    { name: t('navbar.news'), path: '/news' },
+    { name: t('navbar.podcasts'), path: '/podcasts' },
+    { name: t('navbar.events'), path: '/programs' },
   ];
 
   const moreLinks = [
-    { name: 'Live Video', path: '/video' },
+    { name: t('navbar.liveVideo'), path: '/video' },
     { name: 'Request Song', path: '/request' },
     { name: 'Library', path: '/library' },
     { name: 'Events', path: '/events' },
     { name: 'Presenters', path: '/presenters' },
     { name: 'Schedule', path: '/schedule' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: t('navbar.about'), path: '/about' },
+    { name: t('navbar.contact'), path: '/contact' },
   ];
 
   if (user) {
@@ -109,6 +112,16 @@ export function Navbar() {
           <Link to="/search" className="text-muted-foreground hover:text-primary transition-colors p-2">
             <Search className="w-5 h-5" />
           </Link>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ne' : 'en')}
+            className="font-bold text-muted-foreground hover:text-primary"
+          >
+            {i18n.language === 'en' ? 'NP' : 'EN'}
+          </Button>
+
           <ThemeToggle />
           
           {user && (

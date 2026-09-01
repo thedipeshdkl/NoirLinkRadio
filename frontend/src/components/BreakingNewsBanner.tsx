@@ -8,6 +8,12 @@ export function BreakingNewsBanner() {
   const [isVisible, setIsVisible] = useState(true);
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
   const { data: activeNews, isLoading } = useQuery({ 
     queryKey: ['breaking-news', 'active'], 
     queryFn: fetchActiveBreakingNews,
@@ -24,6 +30,12 @@ export function BreakingNewsBanner() {
         if (news) {
           queryClient.setQueryData(['breaking-news', 'active'], news);
           setIsVisible(true);
+
+          if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+            new Notification(`Breaking News: ${news.title}`, {
+              body: news.content || 'Click to read more.',
+            });
+          }
         } else {
           queryClient.setQueryData(['breaking-news', 'active'], null);
         }

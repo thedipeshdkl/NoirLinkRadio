@@ -8,10 +8,12 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchNews, fetchSchedule, fetchPrograms } from '@/api';
 import { getStationTime, isProgramActive } from '@/lib/time';
 import { useSettings } from '@/hooks/useSettings';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
   const { playLive } = useAudioPlayer();
   const { data: settings } = useSettings();
+  const { t } = useTranslation();
 
   const { data: news = [] } = useQuery({ queryKey: ['news'], queryFn: fetchNews });
   const { data: scheduleRaw = [] } = useQuery({ queryKey: ['schedule'], queryFn: fetchSchedule });
@@ -103,15 +105,15 @@ export default function Home() {
                 }}
                 className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-full bg-primary hover:bg-primary/90 text-white shadow-[0_0_40px_rgba(255,0,0,0.4)] transition-all hover:scale-105"
               >
-                <Radio className="w-5 h-5 mr-2 animate-pulse" /> {settings?.homepage?.ctaText || 'Listen Live'}
+                <Radio className="w-5 h-5 mr-2 animate-pulse" /> {t('home.listenLive')}
               </Button>
-              <Link to="/video" className="w-full sm:w-auto">
+              <Link to="/schedule" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
                   variant="outline"
                   className="w-full h-14 px-8 text-lg font-bold rounded-full border-2 hover:bg-secondary transition-all"
                 >
-                  <Video className="w-5 h-5 mr-2" /> Watch Studio
+                  <Calendar className="w-5 h-5 mr-2" /> {t('home.viewSchedule')}
                 </Button>
               </Link>
             </div>

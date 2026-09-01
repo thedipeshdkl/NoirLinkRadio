@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAudioPlayer } from '../contexts/AudioPlayerContext';
-import { Card, CardContent } from '../components/ui/card';
-import { Button } from '../components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { LiveChat } from '@/components/LiveChat';
 import { Play, Pause, Volume2, Radio, Loader2, AlertCircle } from 'lucide-react';
 import { Slider } from '../components/ui/slider';
 import { fetchSchedule, fetchPrograms } from '../api';
@@ -46,7 +47,7 @@ export default function LiveRadio() {
   }, []);
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-12">
+    <div className="container mx-auto max-w-6xl px-4 py-12">
       <h1 className="text-4xl font-extrabold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
         Live Radio
       </h1>
@@ -58,7 +59,9 @@ export default function LiveRadio() {
         </Alert>
       )}
 
-      <Card className="overflow-hidden border-border/50 bg-card/50 backdrop-blur shadow-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <Card className="overflow-hidden border-border/50 bg-card/50 backdrop-blur shadow-2xl h-full flex flex-col justify-center">
         <div className="md:flex">
           <div className="md:w-1/2 relative bg-muted">
             <img 
@@ -125,6 +128,12 @@ export default function LiveRadio() {
           </CardContent>
         </div>
       </Card>
+      </div>
+
+      <div className="lg:col-span-1">
+        <LiveChat />
+      </div>
+      </div>
       
       {currentProgram && (
         <div className="mt-12 text-center">
