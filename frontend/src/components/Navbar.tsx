@@ -2,10 +2,16 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAudioPlayer } from '@/contexts/AudioPlayerContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Radio, Menu, X, Play, Video, LogOut, Search } from 'lucide-react';
+import { Radio, Menu, X, Play, Video, LogOut, Search, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeToggle } from './ThemeToggle';
 import { useSettings } from '@/hooks/useSettings';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,16 +23,19 @@ export function Navbar() {
 
   const isLivePlaying = isPlaying && currentTrack?.isLive;
 
-  const links = [
+  const mainLinks = [
     { name: 'Home', path: '/' },
     { name: 'Live Radio', path: '/radio' },
-    { name: 'Podcasts', path: '/podcasts' },
     { name: 'News', path: '/news' },
+    { name: 'Podcasts', path: '/podcasts' },
+    { name: 'Programs', path: '/programs' },
+  ];
+
+  const moreLinks = [
     { name: 'Live Video', path: '/video' },
     { name: 'Request Song', path: '/request' },
     { name: 'Library', path: '/library' },
     { name: 'Events', path: '/events' },
-    { name: 'Programs', path: '/programs' },
     { name: 'Presenters', path: '/presenters' },
     { name: 'Schedule', path: '/schedule' },
     { name: 'About', path: '/about' },
@@ -34,8 +43,10 @@ export function Navbar() {
   ];
 
   if (user) {
-    links.push({ name: 'Admin', path: '/admin' });
+    moreLinks.push({ name: 'Admin', path: '/admin' });
   }
+
+  const allLinks = [...mainLinks, ...moreLinks];
 
   const handleLogout = async () => {
     await logout();
@@ -62,7 +73,7 @@ export function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center space-x-1">
-          {links.map((link) => (
+          {mainLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -73,6 +84,24 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-foreground/70 transition-colors hover:text-primary outline-none">
+              More <ChevronDown className="w-4 h-4 ml-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {moreLinks.map((link) => (
+                <DropdownMenuItem key={link.path} asChild>
+                  <Link 
+                    to={link.path}
+                    className={`w-full cursor-pointer ${location.pathname === link.path ? 'text-primary font-bold' : ''}`}
+                  >
+                    {link.name}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         {/* Actions */}
@@ -118,8 +147,8 @@ export function Navbar() {
 
       {/* Mobile Nav */}
       {isOpen && (
-        <div className="lg:hidden absolute top-20 left-0 right-0 bg-[#0b1121]/95 backdrop-blur-xl border-b border-white/10 shadow-xl p-4 flex flex-col space-y-2">
-          {links.map((link) => (
+        <div className="lg:hidden absolute top-20 left-0 right-0 bg-[#0b1121]/95 backdrop-blur-xl border-b border-white/10 shadow-xl p-4 flex flex-col space-y-2 max-h-[calc(100vh-5rem)] overflow-y-auto">
+          {allLinks.map((link) => (
             <Link 
               key={link.path} 
               to={link.path}
